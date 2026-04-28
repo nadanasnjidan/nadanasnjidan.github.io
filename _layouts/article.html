@@ -8,27 +8,36 @@ layout: default
     <time class="article__date" datetime="{{ page.issue_date }}">
       {{ page.issue_date | date: "%-d. %-m. %Y" }}
     </time>
+    {% if page.dlib_url %}
+    <a class="article__dlib-link" href="{{ page.dlib_url }}" target="_blank" rel="noopener">
+      Odpri originalni vir na dLib.si →
+    </a>
+    {% endif %}
   </header>
 
-  <div class="article__body">
-    {{ content }}
-  </div>
+  {% if page.featured_image %}
+  <a href="{{ page.featured_image_link }}" target="_blank" rel="noopener" class="article__featured-link">
+    <img src="{{ page.featured_image }}" class="article__featured" alt="Izrezek članka" loading="lazy" />
+  </a>
+  {% endif %}
 
-  <aside class="article__source">
-    {% if page.dlib_url %}
-      <a href="{{ page.dlib_url }}" target="_blank" rel="noopener">
-        Originalni vir na dLib.si →
+  {% if page.scan_urls and page.scan_urls.size > 0 %}
+  <div class="article__scans">
+    {% for url in page.scan_urls %}
+      <a href="{{ url }}" target="_blank" rel="noopener" class="article__scan-link">
+        <img src="{{ url }}"
+             alt="Stran {{ forloop.index }}"
+             class="article__scan-img"
+             loading="lazy" />
       </a>
-    {% endif %}
-    {% if page.scan_urls and page.scan_urls.size > 0 %}
-    <details class="article__scans">
-      <summary>Skeni strani ({{ page.scan_urls.size }})</summary>
-      <ul>
-        {% for url in page.scan_urls %}
-          <li><a href="{{ url }}" target="_blank" rel="noopener">stran {{ forloop.index }}</a></li>
-        {% endfor %}
-      </ul>
-    </details>
-    {% endif %}
-  </aside>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <details class="article__ocr">
+    <summary>Pokaži OCR besedilo ({{ page.scan_urls.size }} strani)</summary>
+    <div class="article__body">
+      {{ content }}
+    </div>
+  </details>
 </article>
