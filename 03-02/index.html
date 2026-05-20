@@ -17,30 +17,60 @@
     header {
       background: #1a1a1a;
       color: #fff;
-      padding: 1.25rem 1.5rem;
+      padding: 0.9rem 1.25rem;
       display: flex;
-      align-items: baseline;
-      gap: 1.25rem;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header__nav {
+      flex: 0 0 auto;
+    }
+
+    .header__center {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
     }
 
     header h1 {
       font-family: Georgia, "Times New Roman", serif;
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       font-weight: 700;
       letter-spacing: -0.01em;
       white-space: nowrap;
     }
 
     header .meta {
-      font-size: 0.8rem;
-      color: #aaa;
+      font-size: 0.75rem;
+      color: #888;
       letter-spacing: 0.04em;
       text-transform: uppercase;
+      margin-top: 0.15rem;
     }
 
-    header a { color: #aaa; text-decoration: none; }
-    header a:hover { color: #fff; }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #888;
+      text-decoration: none;
+      font-size: 0.78rem;
+      padding: 0.35rem 0.6rem;
+      border: 1px solid #333;
+      border-radius: 3px;
+      white-space: nowrap;
+      transition: color 0.1s, border-color 0.1s;
+    }
+    .nav-btn:hover { color: #fff; border-color: #666; }
+
+    .nav-home {
+      color: #666;
+      text-decoration: none;
+      font-size: 0.78rem;
+      padding: 0.35rem 0.5rem;
+    }
+    .nav-home:hover { color: #fff; }
 
     /* ── Grid ── */
     .kiosk {
@@ -70,12 +100,13 @@
       transform: translateY(-2px);
     }
 
-    /* ── Thumbnail area (75% of card height) ── */
+    /* ── Thumbnail area ── */
     .card__scan {
       flex: 0 0 185px;
       overflow: hidden;
       background: #E8E3D8;
       position: relative;
+      cursor: zoom-in;
     }
 
     .card__scan img {
@@ -94,6 +125,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: default;
     }
 
     .card__scan--empty::after {
@@ -102,7 +134,23 @@
       opacity: 0.12;
     }
 
-    /* ── Caption strip (light — reads like paper) ── */
+    /* Preview icon overlay */
+    .card__scan:not(.card__scan--empty)::after {
+      content: "⊕";
+      position: absolute;
+      bottom: 0.4rem;
+      right: 0.4rem;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.7);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .card:hover .card__scan:not(.card__scan--empty)::after { opacity: 1; }
+
+    /* ── Caption strip ── */
     .card__caption {
       flex: 1;
       background: #fff;
@@ -147,7 +195,7 @@
 
     .card__link:hover { text-decoration: underline; }
 
-    /* ── Grouped card (article_level) — double width ── */
+    /* ── Grouped card ── */
     .card--grouped {
       grid-column: span 2;
       flex-direction: row;
@@ -157,72 +205,54 @@
       flex: 0 0 140px;
       align-self: stretch;
       height: auto;
-      min-height: 0;
     }
 
     .card--grouped .card__scan img {
       height: 100%;
-      min-height: 280px;
+      width: 100%;
+      object-fit: cover;
+      object-position: top center;
     }
 
     .card--grouped .card__caption {
       flex: 1;
       display: flex;
       flex-direction: column;
+      border-top: none;
+      border-left: 1px solid #D8D3C8;
       overflow: hidden;
-      min-height: 0;
-    }
-
-    .card__articles-wrap {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      margin-top: 0.4rem;
-      gap: 0.4rem;
-      overflow: hidden;
+      position: relative;
     }
 
     .card__articles {
       flex: 1;
       min-height: 0;
+      margin-top: 0.4rem;
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
-      overflow: hidden;
-      /* fade gradient only on article list, not on the badge */
-      -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-      mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+      gap: 0.25rem;
+      overflow-y: scroll;
+      scrollbar-width: thin;
+      scrollbar-color: #C8C3B8 transparent;
+      padding-right: 0.15rem;
+      padding-bottom: 1.2rem;
     }
 
-    /* no fade when badge is absent (all articles fit) */
-    .card__articles-wrap:not(.has-more) .card__articles {
-      -webkit-mask-image: none;
-      mask-image: none;
-    }
-
-    .card__more {
-      flex-shrink: 0;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #fff;
-      background: #1a56b0;
-      border-radius: 4px;
-      text-decoration: none;
-      display: block;
-      text-align: center;
-    }
-
-    .card__more:hover { background: #1345a0; }
+    .card__articles::-webkit-scrollbar { width: 5px; }
+    .card__articles::-webkit-scrollbar-track { background: transparent; }
+    .card__articles::-webkit-scrollbar-thumb { background: #C8C3B8; border-radius: 3px; }
+    .card__articles::-webkit-scrollbar-thumb:hover { background: #aaa; }
 
     .card__article {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       color: #333;
-      line-height: 1.4;
-      white-space: normal;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       text-decoration: none;
       display: block;
+      flex-shrink: 0;
     }
 
     .card__article:hover {
@@ -230,10 +260,12 @@
       text-decoration: underline;
     }
 
-    .card__article-more {
-      font-size: 0.72rem;
-      color: #888;
-      font-style: italic;
+    .card__scroll-hint {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.75rem;
+      font-size: 0.62rem;
+      color: #bbb;
     }
 
     /* ── Empty state ── */
@@ -261,26 +293,165 @@
     footer a { color: #999; }
     footer a:hover { color: #1a1a1a; }
 
+    /* ── Lightbox ── */
+    .lb {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.92);
+      flex-direction: column;
+    }
+
+    .lb.lb--open { display: flex; }
+
+    .lb__topbar {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(0,0,0,0.6);
+      gap: 1rem;
+    }
+
+    .lb__title {
+      font-size: 0.85rem;
+      color: #ddd;
+      font-family: Georgia, serif;
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lb__controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 0 0 auto;
+    }
+
+    .lb__btn {
+      background: rgba(255,255,255,0.1);
+      color: #ccc;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 3px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .lb__btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .lb__btn:disabled { opacity: 0.3; cursor: default; }
+
+    .lb__page-num {
+      font-size: 0.78rem;
+      color: #888;
+      min-width: 5rem;
+      text-align: center;
+    }
+
+    .lb__ext {
+      font-size: 0.75rem;
+      color: #888;
+      text-decoration: none;
+      border: 1px solid #333;
+      border-radius: 3px;
+      padding: 0.3rem 0.6rem;
+    }
+
+    .lb__ext:hover { color: #ccc; border-color: #555; }
+
+    .lb__close {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      line-height: 1;
+    }
+
+    .lb__close:hover { color: #fff; }
+
+    .lb__img-area {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .lb__img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.5);
+    }
+
+    .lb__no-preview {
+      color: #666;
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 600px) {
       .kiosk { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; padding: 0.75rem; }
       .card--grouped { grid-column: span 2; }
-      header h1 { font-size: 1.2rem; }
+      header h1 { font-size: 1.1rem; }
+      .nav-btn { font-size: 0.7rem; padding: 0.25rem 0.45rem; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>02. 03. — Na današnji dan</h1>
-    <span class="meta">134 edicij · <a href="..">← Nazaj</a></span>
+  <div class="header__nav">
+    <a href=".." class="nav-home" title="Na današnji dan">⌂</a>
+  </div>
+  <div class="header__nav">
+    <a href="../03-01/" class="nav-btn">← 01. 03.</a>
+  </div>
+  <div class="header__center">
+    <h1>02. 03.</h1>
+      <div class="meta">134 edicij</div>
+  </div>
+  <div class="header__nav">
+    <a href="../03-03/" class="nav-btn">03. 03. →</a>
+  </div>
 </header>
+
+<!-- Lightbox -->
+<div id="lb" class="lb" role="dialog" aria-modal="true" aria-label="Predogled časopisa">
+  <div class="lb__topbar">
+    <span class="lb__title" id="lb-title"></span>
+    <div class="lb__controls">
+      <button class="lb__btn" id="lb-prev">← Prej</button>
+      <span class="lb__page-num" id="lb-pnum">Stran 1</span>
+      <button class="lb__btn" id="lb-next">Naprej →</button>
+      <a class="lb__ext" id="lb-dlib" href="#" target="_blank" rel="noopener">dlib.si →</a>
+      <button class="lb__close" id="lb-close" aria-label="Zapri">✕</button>
+    </div>
+  </div>
+  <div class="lb__img-area" id="lb-area">
+    <img class="lb__img" id="lb-img" src="" alt="">
+  </div>
+</div>
 
 <div class="kiosk">
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-SFZJWLHD/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-SFZJWLHD"
+         data-title="Lublanske novize Jann. Fridr. Egerja 1799, letnik 3, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-SFZJWLHD/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-SFZJWLHD"
         alt="Lublanske novize Jann. Fridr. Egerja 1799"
@@ -299,7 +470,10 @@ letnik 3 · št. 9      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-22X1Q76G"
+         data-title="Kmetijske in rokodelske novice 1853, letnik 11, št. 18"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-22X1Q76G/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-22X1Q76G"
         alt="Kmetijske in rokodelske novice 1853"
@@ -312,15 +486,13 @@ letnik 3 · št. 9      </div>
       <div class="card__year">1853</div>
       <div class="card__vol">
 letnik 11 · št. 18      </div>
-      <div class="card__articles-wrap">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-22X1Q76G/" target="_blank" rel="noopener">OGLASNIK št.5</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-4CBS7ND5/" target="_blank" rel="noopener">Zgodovinski pomenki</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-RRAKPZS6/" target="_blank" rel="noopener">Novičar iz slovenskih krajev</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-JGHUGJK7/" target="_blank" rel="noopener">Bratovšnja sv. Florjana</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-U1OC6GZV/" target="_blank" rel="noopener">Podobe življenja</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-6KGWG1PK/" target="_blank" rel="noopener">Novičar iz mnogih krajev</a>
-        </div>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-22X1Q76G/" target="_blank" rel="noopener" title="OGLASNIK št.5">OGLASNIK št.5</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-4CBS7ND5/" target="_blank" rel="noopener" title="Zgodovinski pomenki">Zgodovinski pomenki</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-RRAKPZS6/" target="_blank" rel="noopener" title="Novičar iz slovenskih krajev">Novičar iz slovenskih krajev</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-JGHUGJK7/" target="_blank" rel="noopener" title="Bratovšnja sv. Florjana">Bratovšnja sv. Florjana</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-U1OC6GZV/" target="_blank" rel="noopener" title="Podobe življenja">Podobe življenja</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-6KGWG1PK/" target="_blank" rel="noopener" title="Novičar iz mnogih krajev">Novičar iz mnogih krajev</a>
       </div>
     </div>
   </div>
@@ -328,7 +500,10 @@ letnik 11 · št. 18      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-JVMJ7C0M/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-JVMJ7C0M"
+         data-title="Zgodnja Danica 1854, letnik 7, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-JVMJ7C0M/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-JVMJ7C0M"
         alt="Zgodnja Danica 1854"
@@ -347,7 +522,10 @@ letnik 7 · št. 9      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-25SKL9Q4"
+         data-title="Kmetijske in rokodelske novice 1859, letnik 17, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-25SKL9Q4/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-25SKL9Q4"
         alt="Kmetijske in rokodelske novice 1859"
@@ -360,26 +538,29 @@ letnik 7 · št. 9      </div>
       <div class="card__year">1859</div>
       <div class="card__vol">
 letnik 17 · št. 9      </div>
-      <div class="card__articles-wrap has-more">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-25SKL9Q4/" target="_blank" rel="noopener">Kratkočasno berilo</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZWE1Q1Z3/" target="_blank" rel="noopener">Pogovori vredništva</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-5SXJHRJ8/" target="_blank" rel="noopener">Iz lastne skušnje vsake baze nekoliko</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-QF6HJ6BT/" target="_blank" rel="noopener">Misli o Vodnikovem spominku</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-SSQ65PNV/" target="_blank" rel="noopener">Zvončki</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-RKL2WCBG/" target="_blank" rel="noopener">Kratkočasnice</a>
-        </div>
-        <a class="card__more" href="https://dlib.si/details/URN:NBN:SI:DOC-25SKL9Q4/" target="_blank" rel="noopener">
-          ↓ še 4 člankov — odpri v dlib.si
-        </a>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-25SKL9Q4/" target="_blank" rel="noopener" title="Kratkočasno berilo">Kratkočasno berilo</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZWE1Q1Z3/" target="_blank" rel="noopener" title="Pogovori vredništva">Pogovori vredništva</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-5SXJHRJ8/" target="_blank" rel="noopener" title="Iz lastne skušnje vsake baze nekoliko">Iz lastne skušnje vsake baze nekoliko</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-QF6HJ6BT/" target="_blank" rel="noopener" title="Misli o Vodnikovem spominku">Misli o Vodnikovem spominku</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-SSQ65PNV/" target="_blank" rel="noopener" title="Zvončki">Zvončki</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-RKL2WCBG/" target="_blank" rel="noopener" title="Kratkočasnice">Kratkočasnice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-JK3NMK0Y/" target="_blank" rel="noopener" title="Slovanski popotnik">Slovanski popotnik</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-UZVAD2ZA/" target="_blank" rel="noopener" title="Novičar iz domačih in ptujih dežel">Novičar iz domačih in ptujih dežel</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-OB7J04KG/" target="_blank" rel="noopener" title="Iz potne bisage">Iz potne bisage</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-YGF63WIE/" target="_blank" rel="noopener" title="Dopisi">Dopisi</a>
       </div>
+      <div class="card__scroll-hint">↕ scroll za več</div>
     </div>
   </div>
 
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-G9FSZL9C"
+         data-title="Kmetijske in rokodelske novice 1864, letnik 22, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-G9FSZL9C/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-G9FSZL9C"
         alt="Kmetijske in rokodelske novice 1864"
@@ -392,26 +573,27 @@ letnik 17 · št. 9      </div>
       <div class="card__year">1864</div>
       <div class="card__vol">
 letnik 22 · št. 9      </div>
-      <div class="card__articles-wrap has-more">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-G9FSZL9C/" target="_blank" rel="noopener">Gospodarska skušnja</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-19VMA5WM/" target="_blank" rel="noopener">Dopisi</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-5O8A9NUO/" target="_blank" rel="noopener">O goveji kugi</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VDC4JFCH/" target="_blank" rel="noopener">Uganjka zastavice v listu 8</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-INFF0HAD/" target="_blank" rel="noopener">Gospodarske stvari</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-HK6RSDF3/" target="_blank" rel="noopener">Novičar iz domačih in ptujih dežel</a>
-        </div>
-        <a class="card__more" href="https://dlib.si/details/URN:NBN:SI:DOC-G9FSZL9C/" target="_blank" rel="noopener">
-          ↓ še 2 člankov — odpri v dlib.si
-        </a>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-G9FSZL9C/" target="_blank" rel="noopener" title="Gospodarska skušnja">Gospodarska skušnja</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-19VMA5WM/" target="_blank" rel="noopener" title="Dopisi">Dopisi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-5O8A9NUO/" target="_blank" rel="noopener" title="O goveji kugi">O goveji kugi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VDC4JFCH/" target="_blank" rel="noopener" title="Uganjka zastavice v listu 8">Uganjka zastavice v listu 8</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-INFF0HAD/" target="_blank" rel="noopener" title="Gospodarske stvari">Gospodarske stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-HK6RSDF3/" target="_blank" rel="noopener" title="Novičar iz domačih in ptujih dežel">Novičar iz domačih in ptujih dežel</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-YNQV0VJ6/" target="_blank" rel="noopener" title="Podučno-zabavno berilo">Podučno-zabavno berilo</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-YZHUTOPX/" target="_blank" rel="noopener" title="Listnica vredništva">Listnica vredništva</a>
       </div>
+      <div class="card__scroll-hint">↕ scroll za več</div>
     </div>
   </div>
 
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-C36QG5OM/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-C36QG5OM"
+         data-title="Slovenski narod 1869, letnik 2, št. 26"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-C36QG5OM/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-C36QG5OM"
         alt="Slovenski narod 1869"
@@ -430,7 +612,10 @@ letnik 2 · št. 26      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-FG3EJOO9"
+         data-title="Kmetijske in rokodelske novice 1870, letnik 28, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-FG3EJOO9/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-FG3EJOO9"
         alt="Kmetijske in rokodelske novice 1870"
@@ -443,26 +628,26 @@ letnik 2 · št. 26      </div>
       <div class="card__year">1870</div>
       <div class="card__vol">
 letnik 28 · št. 9      </div>
-      <div class="card__articles-wrap has-more">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-FG3EJOO9/" target="_blank" rel="noopener">Gnojišče</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-Q9WOB3ON/" target="_blank" rel="noopener">Slovansko slovstvo</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-QX5PIAIV/" target="_blank" rel="noopener">Kako obdelujejo in izdelujejo lan v Moravskem Schonbergu in bližnji okolici</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-E9PJK98Y/" target="_blank" rel="noopener">Novičar iz domačih in ptujih dežel</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-PUW1A7OM/" target="_blank" rel="noopener">Dopisi</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-7GLY9WER/" target="_blank" rel="noopener">Natoroznanske stvari</a>
-        </div>
-        <a class="card__more" href="https://dlib.si/details/URN:NBN:SI:DOC-FG3EJOO9/" target="_blank" rel="noopener">
-          ↓ še 1 člankov — odpri v dlib.si
-        </a>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-FG3EJOO9/" target="_blank" rel="noopener" title="Gnojišče">Gnojišče</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-Q9WOB3ON/" target="_blank" rel="noopener" title="Slovansko slovstvo">Slovansko slovstvo</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-QX5PIAIV/" target="_blank" rel="noopener" title="Kako obdelujejo in izdelujejo lan v Moravskem Schonbergu in bližnji okolici">Kako obdelujejo in izdelujejo lan v Moravskem Schonbergu in bližnji okolici</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-E9PJK98Y/" target="_blank" rel="noopener" title="Novičar iz domačih in ptujih dežel">Novičar iz domačih in ptujih dežel</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-PUW1A7OM/" target="_blank" rel="noopener" title="Dopisi">Dopisi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-7GLY9WER/" target="_blank" rel="noopener" title="Natoroznanske stvari">Natoroznanske stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-TJAFSJVB/" target="_blank" rel="noopener" title="Nekaj, na kar bi se moglo pri cenitvi močirnatih zemljišč ozir jemati">Nekaj, na kar bi se moglo pri cenitvi močirnatih zemljišč ozir jemati</a>
       </div>
+      <div class="card__scroll-hint">↕ scroll za več</div>
     </div>
   </div>
 
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-Y9BP61M6/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-Y9BP61M6"
+         data-title="Slovenski narod 1871, letnik 4, št. 25"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-Y9BP61M6/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-Y9BP61M6"
         alt="Slovenski narod 1871"
@@ -481,7 +666,10 @@ letnik 4 · št. 25      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-KIADPFCI/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-KIADPFCI"
+         data-title="Slovenski narod 1872, letnik 5, št. 25"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-KIADPFCI/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-KIADPFCI"
         alt="Slovenski narod 1872"
@@ -500,7 +688,10 @@ letnik 5 · št. 25      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-0ZJLOU9M/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-0ZJLOU9M"
+         data-title="Soča 1872, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-0ZJLOU9M/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-0ZJLOU9M"
         alt="Soča 1872"
@@ -519,7 +710,10 @@ letnik 5 · št. 25      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-WO7B09QL/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-WO7B09QL"
+         data-title="Slovenski narod 1873, letnik 6, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-WO7B09QL/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-WO7B09QL"
         alt="Slovenski narod 1873"
@@ -538,7 +732,10 @@ letnik 6 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-9FJF4W3B/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-9FJF4W3B"
+         data-title="Slovenec (1873) 1875, letnik 3, št. 26"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-9FJF4W3B/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-9FJF4W3B"
         alt="Slovenec (1873) 1875"
@@ -557,7 +754,10 @@ letnik 3 · št. 26      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-9PD1SOJP/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-9PD1SOJP"
+         data-title="Slovenski narod 1875, letnik 8, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-9PD1SOJP/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-9PD1SOJP"
         alt="Slovenski narod 1875"
@@ -576,7 +776,10 @@ letnik 8 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-EHMCKBMR/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-EHMCKBMR"
+         data-title="Slovenec (1873) 1876, letnik 4, št. 26"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-EHMCKBMR/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-EHMCKBMR"
         alt="Slovenec (1873) 1876"
@@ -595,7 +798,10 @@ letnik 4 · št. 26      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-1IT5XR54"
+         data-title="Slovenski gospodar 1876, letnik 10, št. 10"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-1IT5XR54/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-1IT5XR54"
         alt="Slovenski gospodar 1876"
@@ -608,15 +814,13 @@ letnik 4 · št. 26      </div>
       <div class="card__year">1876</div>
       <div class="card__vol">
 letnik 10 · št. 10      </div>
-      <div class="card__articles-wrap">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-1IT5XR54/" target="_blank" rel="noopener">Zmaga Slovencev pri volitvi v Mariboru 26. februarja</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-58XTQ39X/" target="_blank" rel="noopener">Dopisi</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-QB35WU8Z/" target="_blank" rel="noopener">Razne stvari</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-SMXK8FOY/" target="_blank" rel="noopener">Politični ogled</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-34YV71IK/" target="_blank" rel="noopener">Gospodarske stvari</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-YBLK6MJH/" target="_blank" rel="noopener">Za poduk in kratek čas</a>
-        </div>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-1IT5XR54/" target="_blank" rel="noopener" title="Zmaga Slovencev pri volitvi v Mariboru 26. februarja">Zmaga Slovencev pri volitvi v Mariboru 26. februarja</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-58XTQ39X/" target="_blank" rel="noopener" title="Dopisi">Dopisi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-QB35WU8Z/" target="_blank" rel="noopener" title="Razne stvari">Razne stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-SMXK8FOY/" target="_blank" rel="noopener" title="Politični ogled">Politični ogled</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-34YV71IK/" target="_blank" rel="noopener" title="Gospodarske stvari">Gospodarske stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-YBLK6MJH/" target="_blank" rel="noopener" title="Za poduk in kratek čas">Za poduk in kratek čas</a>
       </div>
     </div>
   </div>
@@ -624,7 +828,10 @@ letnik 10 · št. 10      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-L1X5SJTF/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-L1X5SJTF"
+         data-title="Slovenski narod 1876, letnik 9, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-L1X5SJTF/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-L1X5SJTF"
         alt="Slovenski narod 1876"
@@ -643,7 +850,10 @@ letnik 9 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-PLDIOOLM/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-PLDIOOLM"
+         data-title="Slovenski narod 1877, letnik 10, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-PLDIOOLM/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-PLDIOOLM"
         alt="Slovenski narod 1877"
@@ -662,7 +872,10 @@ letnik 10 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-OM8XW1IF/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-OM8XW1IF"
+         data-title="Soča 1877, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-OM8XW1IF/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-OM8XW1IF"
         alt="Soča 1877"
@@ -681,7 +894,10 @@ letnik 10 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-D4EQ9SJT/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-D4EQ9SJT"
+         data-title="Zgodnja Danica 1877, letnik 30, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-D4EQ9SJT/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-D4EQ9SJT"
         alt="Zgodnja Danica 1877"
@@ -700,7 +916,10 @@ letnik 30 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-2Z0FQMGJ/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-2Z0FQMGJ"
+         data-title="Slovenec (1873) 1878, letnik 6, št. 25"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-2Z0FQMGJ/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-2Z0FQMGJ"
         alt="Slovenec (1873) 1878"
@@ -719,7 +938,10 @@ letnik 6 · št. 25      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-JKUKTJWM/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-JKUKTJWM"
+         data-title="Slovenski narod 1878, letnik 11, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-JKUKTJWM/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-JKUKTJWM"
         alt="Slovenski narod 1878"
@@ -738,7 +960,10 @@ letnik 11 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-CSXGZQU3/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-CSXGZQU3"
+         data-title="Slovenski narod 1879, letnik 12, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-CSXGZQU3/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-CSXGZQU3"
         alt="Slovenski narod 1879"
@@ -757,7 +982,10 @@ letnik 12 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-Y4XK6SU6/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-Y4XK6SU6"
+         data-title="Slovenec (1873) 1880, letnik 8, št. 25"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-Y4XK6SU6/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-Y4XK6SU6"
         alt="Slovenec (1873) 1880"
@@ -776,7 +1004,10 @@ letnik 8 · št. 25      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-IKRVEWXF/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-IKRVEWXF"
+         data-title="Slovenski narod 1880, letnik 13, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-IKRVEWXF/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-IKRVEWXF"
         alt="Slovenski narod 1880"
@@ -795,7 +1026,10 @@ letnik 13 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-45EZ0RJ6/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-45EZ0RJ6"
+         data-title="Edinost (Trst) 1881, letnik 6, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-45EZ0RJ6/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-45EZ0RJ6"
         alt="Edinost (Trst) 1881"
@@ -814,7 +1048,10 @@ letnik 6 · št. 9      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-9NKQG5AE"
+         data-title="Kmetijske in rokodelske novice 1881, letnik 39, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-9NKQG5AE/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-9NKQG5AE"
         alt="Kmetijske in rokodelske novice 1881"
@@ -827,26 +1064,28 @@ letnik 6 · št. 9      </div>
       <div class="card__year">1881</div>
       <div class="card__vol">
 letnik 39 · št. 9      </div>
-      <div class="card__articles-wrap has-more">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-9NKQG5AE/" target="_blank" rel="noopener">Novičar iz domačih in tujih dežel</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-K4L1FR40/" target="_blank" rel="noopener">Mnogovrstne novice</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-CXYHXLH3/" target="_blank" rel="noopener">Slovensko slovstvo</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-Q04J6HO5/" target="_blank" rel="noopener">Noč</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VJEO693D/" target="_blank" rel="noopener">Popravek</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-0E6XN1RE/" target="_blank" rel="noopener">Gospodarske stvari</a>
-        </div>
-        <a class="card__more" href="https://dlib.si/details/URN:NBN:SI:DOC-9NKQG5AE/" target="_blank" rel="noopener">
-          ↓ še 3 člankov — odpri v dlib.si
-        </a>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-9NKQG5AE/" target="_blank" rel="noopener" title="Novičar iz domačih in tujih dežel">Novičar iz domačih in tujih dežel</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-K4L1FR40/" target="_blank" rel="noopener" title="Mnogovrstne novice">Mnogovrstne novice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-CXYHXLH3/" target="_blank" rel="noopener" title="Slovensko slovstvo">Slovensko slovstvo</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-Q04J6HO5/" target="_blank" rel="noopener" title="Noč">Noč</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VJEO693D/" target="_blank" rel="noopener" title="Popravek">Popravek</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-0E6XN1RE/" target="_blank" rel="noopener" title="Gospodarske stvari">Gospodarske stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-8MTG66EB/" target="_blank" rel="noopener" title="Gospodarske novice">Gospodarske novice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-77UT4ADA/" target="_blank" rel="noopener" title="Narodne stvari">Narodne stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-61FZ6VXY/" target="_blank" rel="noopener" title="Naši dopisi">Naši dopisi</a>
       </div>
+      <div class="card__scroll-hint">↕ scroll za več</div>
     </div>
   </div>
 
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-2GIAOFT3/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-2GIAOFT3"
+         data-title="Slovenski narod 1881, letnik 14, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-2GIAOFT3/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-2GIAOFT3"
         alt="Slovenski narod 1881"
@@ -865,7 +1104,10 @@ letnik 14 · št. 49      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-G3AM56ZK"
+         data-title="Kmetijske in rokodelske novice 1882, letnik 40, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-G3AM56ZK/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-G3AM56ZK"
         alt="Kmetijske in rokodelske novice 1882"
@@ -878,26 +1120,36 @@ letnik 14 · št. 49      </div>
       <div class="card__year">1882</div>
       <div class="card__vol">
 letnik 40 · št. 9      </div>
-      <div class="card__articles-wrap has-more">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-G3AM56ZK/" target="_blank" rel="noopener">Današnjemu listu je priložen</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-4PFIVVR0/" target="_blank" rel="noopener">Spomladno požiganje pašnikov in travnikov na Krasu</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-KMKR5ZFS/" target="_blank" rel="noopener">Gospodarske izkušnje</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-CFX8MUSV/" target="_blank" rel="noopener">Ptujsko prašno polje in njega obdelovanje</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-CUUE6XJO/" target="_blank" rel="noopener">Poziv slovenskim pisateljem!</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-13ARLMEK/" target="_blank" rel="noopener">Poziv</a>
-        </div>
-        <a class="card__more" href="https://dlib.si/details/URN:NBN:SI:DOC-G3AM56ZK/" target="_blank" rel="noopener">
-          ↓ še 9 člankov — odpri v dlib.si
-        </a>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-G3AM56ZK/" target="_blank" rel="noopener" title="Današnjemu listu je priložen">Današnjemu listu je priložen</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-4PFIVVR0/" target="_blank" rel="noopener" title="Spomladno požiganje pašnikov in travnikov na Krasu">Spomladno požiganje pašnikov in travnikov na Krasu</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-KMKR5ZFS/" target="_blank" rel="noopener" title="Gospodarske izkušnje">Gospodarske izkušnje</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-CFX8MUSV/" target="_blank" rel="noopener" title="Ptujsko prašno polje in njega obdelovanje">Ptujsko prašno polje in njega obdelovanje</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-CUUE6XJO/" target="_blank" rel="noopener" title="Poziv slovenskim pisateljem!">Poziv slovenskim pisateljem!</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-13ARLMEK/" target="_blank" rel="noopener" title="Poziv">Poziv</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-SWN83HRN/" target="_blank" rel="noopener" title="OGLASNIK ŠT.8">OGLASNIK ŠT.8</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-W1X0Q66U/" target="_blank" rel="noopener" title="Novičar iz tujih in domačih dežel">Novičar iz tujih in domačih dežel</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-3M6UNSWR/" target="_blank" rel="noopener" title="Mnogovrstne novice">Mnogovrstne novice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-BE6YCVWR/" target="_blank" rel="noopener" title="Telegram Novicam">Telegram Novicam</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-XQOCW2CM/" target="_blank" rel="noopener" title="Razglas">Razglas</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-8JZBPS0G/" target="_blank" rel="noopener" title="Posestnikom, oziroma občinskim zastopom in županstvom trnovsko-uremske doline v pre-
+">Posestnikom, oziroma občinskim zastopom in županstvom trnovsko-uremske doline v pre-
+</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-0XWXN8Y9/" target="_blank" rel="noopener" title="Gospodarske novice">Gospodarske novice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-D7NBOZVZ/" target="_blank" rel="noopener" title="Naši dopisi">Naši dopisi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-TXEHDGNR/" target="_blank" rel="noopener" title="Češki kralj Karol I">Češki kralj Karol I</a>
       </div>
+      <div class="card__scroll-hint">↕ scroll za več</div>
     </div>
   </div>
 
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-EM4T5DAR/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-EM4T5DAR"
+         data-title="Slovenec (1873) 1882, letnik 10, št. 24"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-EM4T5DAR/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-EM4T5DAR"
         alt="Slovenec (1873) 1882"
@@ -916,7 +1168,10 @@ letnik 10 · št. 24      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-LQTW7XXV"
+         data-title="Slovenski gospodar 1882, letnik 16, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-LQTW7XXV/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-LQTW7XXV"
         alt="Slovenski gospodar 1882"
@@ -929,15 +1184,13 @@ letnik 10 · št. 24      </div>
       <div class="card__year">1882</div>
       <div class="card__vol">
 letnik 16 · št. 9      </div>
-      <div class="card__articles-wrap">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-LQTW7XXV/" target="_blank" rel="noopener">Slovenskemu narodu!</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZM5FNAFB/" target="_blank" rel="noopener">Dopisi</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-5G80ZNAH/" target="_blank" rel="noopener">Razne stvari</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-BFXPGOFO/" target="_blank" rel="noopener">Za poduk in kratek čas</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-6MNVX2QT/" target="_blank" rel="noopener">Gospodarske stvari</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-O1XXYC0N/" target="_blank" rel="noopener">Politični ogled</a>
-        </div>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-LQTW7XXV/" target="_blank" rel="noopener" title="Slovenskemu narodu!">Slovenskemu narodu!</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZM5FNAFB/" target="_blank" rel="noopener" title="Dopisi">Dopisi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-5G80ZNAH/" target="_blank" rel="noopener" title="Razne stvari">Razne stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-BFXPGOFO/" target="_blank" rel="noopener" title="Za poduk in kratek čas">Za poduk in kratek čas</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-6MNVX2QT/" target="_blank" rel="noopener" title="Gospodarske stvari">Gospodarske stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-O1XXYC0N/" target="_blank" rel="noopener" title="Politični ogled">Politični ogled</a>
       </div>
     </div>
   </div>
@@ -945,7 +1198,10 @@ letnik 16 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-CTY66IGD/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-CTY66IGD"
+         data-title="Slovenski narod 1882, letnik 15, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-CTY66IGD/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-CTY66IGD"
         alt="Slovenski narod 1882"
@@ -964,7 +1220,10 @@ letnik 15 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-9NG2IUMW/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-9NG2IUMW"
+         data-title="Slovenski narod 1883, letnik 16, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-9NG2IUMW/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-9NG2IUMW"
         alt="Slovenski narod 1883"
@@ -983,7 +1242,10 @@ letnik 16 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-JM4IHCJM/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-JM4IHCJM"
+         data-title="Soča 1883, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-JM4IHCJM/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-JM4IHCJM"
         alt="Soča 1883"
@@ -1002,7 +1264,10 @@ letnik 16 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-QVPKCPSM/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-QVPKCPSM"
+         data-title="Zgodnja Danica 1883, letnik 36, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-QVPKCPSM/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-QVPKCPSM"
         alt="Zgodnja Danica 1883"
@@ -1021,7 +1286,10 @@ letnik 36 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-MX3UTWTG/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-MX3UTWTG"
+         data-title="Slovenec (1873) 1885, letnik 13, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-MX3UTWTG/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-MX3UTWTG"
         alt="Slovenec (1873) 1885"
@@ -1040,7 +1308,10 @@ letnik 13 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-L90I0VLZ/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-L90I0VLZ"
+         data-title="Slovenski narod 1885, letnik 18, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-L90I0VLZ/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-L90I0VLZ"
         alt="Slovenski narod 1885"
@@ -1059,7 +1330,10 @@ letnik 18 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-S9794PVN/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-S9794PVN"
+         data-title="Slovenski narod 1885, letnik 18, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-S9794PVN/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-S9794PVN"
         alt="Slovenski narod 1885"
@@ -1078,7 +1352,10 @@ letnik 18 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-XNE9C6FQ/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-XNE9C6FQ"
+         data-title="Slovenec (1873) 1886, letnik 14, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-XNE9C6FQ/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-XNE9C6FQ"
         alt="Slovenec (1873) 1886"
@@ -1097,7 +1374,10 @@ letnik 14 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-I0955L3U/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-I0955L3U"
+         data-title="Slovenski narod 1886, letnik 19, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-I0955L3U/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-I0955L3U"
         alt="Slovenski narod 1886"
@@ -1116,7 +1396,10 @@ letnik 19 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-BBQMDKLX/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-BBQMDKLX"
+         data-title="Edinost (Trst) 1887, letnik 12, št. 18"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-BBQMDKLX/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-BBQMDKLX"
         alt="Edinost (Trst) 1887"
@@ -1135,7 +1418,10 @@ letnik 12 · št. 18      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-4J6GZ1CP"
+         data-title="Kmetijske in rokodelske novice 1887, letnik 45, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-4J6GZ1CP/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-4J6GZ1CP"
         alt="Kmetijske in rokodelske novice 1887"
@@ -1148,26 +1434,30 @@ letnik 12 · št. 18      </div>
       <div class="card__year">1887</div>
       <div class="card__vol">
 letnik 45 · št. 9      </div>
-      <div class="card__articles-wrap has-more">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-4J6GZ1CP/" target="_blank" rel="noopener">Telegram &#34;Novicam&#34;</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-NWJRXVF3/" target="_blank" rel="noopener">Skrbimo za spomladansko setev!</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZUHH1UH6/" target="_blank" rel="noopener">Novičar iz domačih in tujih dežel</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-1W1H4JJK/" target="_blank" rel="noopener">Vprašanja in odgovori</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VHU2C9F7/" target="_blank" rel="noopener">Zemljepisni in narodopisni obrazi</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-IHNXLGZI/" target="_blank" rel="noopener">Naši dopisi</a>
-        </div>
-        <a class="card__more" href="https://dlib.si/details/URN:NBN:SI:DOC-4J6GZ1CP/" target="_blank" rel="noopener">
-          ↓ še 5 člankov — odpri v dlib.si
-        </a>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-4J6GZ1CP/" target="_blank" rel="noopener" title="Telegram &#34;Novicam&#34;">Telegram &#34;Novicam&#34;</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-NWJRXVF3/" target="_blank" rel="noopener" title="Skrbimo za spomladansko setev!">Skrbimo za spomladansko setev!</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZUHH1UH6/" target="_blank" rel="noopener" title="Novičar iz domačih in tujih dežel">Novičar iz domačih in tujih dežel</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-1W1H4JJK/" target="_blank" rel="noopener" title="Vprašanja in odgovori">Vprašanja in odgovori</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VHU2C9F7/" target="_blank" rel="noopener" title="Zemljepisni in narodopisni obrazi">Zemljepisni in narodopisni obrazi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-IHNXLGZI/" target="_blank" rel="noopener" title="Naši dopisi">Naši dopisi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-HDO02E85/" target="_blank" rel="noopener" title="Iz državnega zbora">Iz državnega zbora</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-82VAUY06/" target="_blank" rel="noopener" title="Prijazna beseda Notranjcem">Prijazna beseda Notranjcem</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-0OVDV675/" target="_blank" rel="noopener" title="Pomanjkanje krme in kako pomagati">Pomanjkanje krme in kako pomagati</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-7VQ6LKOR/" target="_blank" rel="noopener" title="Gospodarske novice">Gospodarske novice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-6UZWBMSO/" target="_blank" rel="noopener" title="Na kaj se ima paziti pri presajanji drevesec">Na kaj se ima paziti pri presajanji drevesec</a>
       </div>
+      <div class="card__scroll-hint">↕ scroll za več</div>
     </div>
   </div>
 
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-F28QUZQB/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-F28QUZQB"
+         data-title="Slovenec (1873) 1887, letnik 15, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-F28QUZQB/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-F28QUZQB"
         alt="Slovenec (1873) 1887"
@@ -1186,7 +1476,10 @@ letnik 15 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-TR9ALG1L/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-TR9ALG1L"
+         data-title="Slovenski narod 1887, letnik 20, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-TR9ALG1L/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-TR9ALG1L"
         alt="Slovenski narod 1887"
@@ -1205,7 +1498,10 @@ letnik 20 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-TUMAE2P8/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-TUMAE2P8"
+         data-title="Slovenec (1873) 1888, letnik 16, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-TUMAE2P8/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-TUMAE2P8"
         alt="Slovenec (1873) 1888"
@@ -1224,7 +1520,10 @@ letnik 16 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-1SU36AY0/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-1SU36AY0"
+         data-title="Slovenski narod 1888, letnik 21, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-1SU36AY0/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-1SU36AY0"
         alt="Slovenski narod 1888"
@@ -1243,7 +1542,10 @@ letnik 21 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-OVLV0BOY/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-OVLV0BOY"
+         data-title="Zgodnja Danica 1888, letnik 41, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-OVLV0BOY/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-OVLV0BOY"
         alt="Zgodnja Danica 1888"
@@ -1262,7 +1564,10 @@ letnik 41 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-B8SHTQBY/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-B8SHTQBY"
+         data-title="Edinost (Trst) 1889, letnik 14, št. 18"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-B8SHTQBY/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-B8SHTQBY"
         alt="Edinost (Trst) 1889"
@@ -1281,7 +1586,10 @@ letnik 14 · št. 18      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-99ZX18MY/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-99ZX18MY"
+         data-title="Slovenec (1873) 1889, letnik 17, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-99ZX18MY/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-99ZX18MY"
         alt="Slovenec (1873) 1889"
@@ -1300,7 +1608,10 @@ letnik 17 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-F7RB5SRX/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-F7RB5SRX"
+         data-title="Slovenski narod 1889, letnik 22, št. 52"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-F7RB5SRX/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-F7RB5SRX"
         alt="Slovenski narod 1889"
@@ -1319,7 +1630,10 @@ letnik 22 · št. 52      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-23M30YQF/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-23M30YQF"
+         data-title="Slovenec (1873) 1891, letnik 19, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-23M30YQF/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-23M30YQF"
         alt="Slovenec (1873) 1891"
@@ -1338,7 +1652,10 @@ letnik 19 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-QVHGLXQU/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-QVHGLXQU"
+         data-title="Slovenski narod 1891, letnik 24, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-QVHGLXQU/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-QVHGLXQU"
         alt="Slovenski narod 1891"
@@ -1357,7 +1674,10 @@ letnik 24 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-5BZ9ISEV/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-5BZ9ISEV"
+         data-title="Edinost (Trst) 1892, letnik 17, št. 18"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-5BZ9ISEV/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-5BZ9ISEV"
         alt="Edinost (Trst) 1892"
@@ -1376,7 +1696,10 @@ letnik 17 · št. 18      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-S90CZ26T/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-S90CZ26T"
+         data-title="Slovenec (1873) 1892, letnik 20, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-S90CZ26T/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-S90CZ26T"
         alt="Slovenec (1873) 1892"
@@ -1395,7 +1718,10 @@ letnik 20 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-2NW7JGPE/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-2NW7JGPE"
+         data-title="Slovenski narod 1892, letnik 25, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-2NW7JGPE/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-2NW7JGPE"
         alt="Slovenski narod 1892"
@@ -1414,7 +1740,10 @@ letnik 25 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-OENCB3NR/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-OENCB3NR"
+         data-title="Domoljub (Ljubljana) 1893, letnik 6, št. 5"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-OENCB3NR/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-OENCB3NR"
         alt="Domoljub (Ljubljana) 1893"
@@ -1433,7 +1762,10 @@ letnik 6 · št. 5      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-BUDSI6G7/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-BUDSI6G7"
+         data-title="Slovenec (1873) 1893, letnik 21, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-BUDSI6G7/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-BUDSI6G7"
         alt="Slovenec (1873) 1893"
@@ -1452,7 +1784,10 @@ letnik 21 · št. 50      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-9YKQJB6G"
+         data-title="Slovenski gospodar 1893, letnik 27, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-9YKQJB6G/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-9YKQJB6G"
         alt="Slovenski gospodar 1893"
@@ -1465,26 +1800,27 @@ letnik 21 · št. 50      </div>
       <div class="card__year">1893</div>
       <div class="card__vol">
 letnik 27 · št. 9      </div>
-      <div class="card__articles-wrap has-more">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-9YKQJB6G/" target="_blank" rel="noopener">Beseda o lovski postavi</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-FVTIKZMO/" target="_blank" rel="noopener">Za poduk in kratek čas</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-FYZPAA7Q/" target="_blank" rel="noopener">Razne stvari</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZL0HENLP/" target="_blank" rel="noopener">Šolske razmere</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-RV0MBS2D/" target="_blank" rel="noopener">Gospodarske stvari</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-JH1PC19C/" target="_blank" rel="noopener">Cerkvene zadeve</a>
-        </div>
-        <a class="card__more" href="https://dlib.si/details/URN:NBN:SI:DOC-9YKQJB6G/" target="_blank" rel="noopener">
-          ↓ še 2 člankov — odpri v dlib.si
-        </a>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-9YKQJB6G/" target="_blank" rel="noopener" title="Beseda o lovski postavi">Beseda o lovski postavi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-FVTIKZMO/" target="_blank" rel="noopener" title="Za poduk in kratek čas">Za poduk in kratek čas</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-FYZPAA7Q/" target="_blank" rel="noopener" title="Razne stvari">Razne stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZL0HENLP/" target="_blank" rel="noopener" title="Šolske razmere">Šolske razmere</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-RV0MBS2D/" target="_blank" rel="noopener" title="Gospodarske stvari">Gospodarske stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-JH1PC19C/" target="_blank" rel="noopener" title="Cerkvene zadeve">Cerkvene zadeve</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-MVBXURX6/" target="_blank" rel="noopener" title="Politični ogled">Politični ogled</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-O9VW1JPX/" target="_blank" rel="noopener" title="Dopisi">Dopisi</a>
       </div>
+      <div class="card__scroll-hint">↕ scroll za več</div>
     </div>
   </div>
 
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-CCOCZ8OW/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-CCOCZ8OW"
+         data-title="Slovenski narod 1893, letnik 26, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-CCOCZ8OW/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-CCOCZ8OW"
         alt="Slovenski narod 1893"
@@ -1503,7 +1839,10 @@ letnik 26 · št. 50      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-NIL3NRX3"
+         data-title="Kmetijske in rokodelske novice 1894, letnik 52, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-NIL3NRX3/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-NIL3NRX3"
         alt="Kmetijske in rokodelske novice 1894"
@@ -1516,26 +1855,32 @@ letnik 26 · št. 50      </div>
       <div class="card__year">1894</div>
       <div class="card__vol">
 letnik 52 · št. 9      </div>
-      <div class="card__articles-wrap has-more">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-NIL3NRX3/" target="_blank" rel="noopener">Poučni in zabavni drobiž</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-4FQCWVLV/" target="_blank" rel="noopener">Novice</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-LJSLG97G/" target="_blank" rel="noopener">Politični pregled</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-12YID9V7/" target="_blank" rel="noopener">Veliko poneverjenje</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-57H6DS8B/" target="_blank" rel="noopener">Dr. Franjo Rački</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VHOU3FZB/" target="_blank" rel="noopener">Kmetijske raznoterosti</a>
-        </div>
-        <a class="card__more" href="https://dlib.si/details/URN:NBN:SI:DOC-NIL3NRX3/" target="_blank" rel="noopener">
-          ↓ še 7 člankov — odpri v dlib.si
-        </a>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-NIL3NRX3/" target="_blank" rel="noopener" title="Poučni in zabavni drobiž">Poučni in zabavni drobiž</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-4FQCWVLV/" target="_blank" rel="noopener" title="Novice">Novice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-LJSLG97G/" target="_blank" rel="noopener" title="Politični pregled">Politični pregled</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-12YID9V7/" target="_blank" rel="noopener" title="Veliko poneverjenje">Veliko poneverjenje</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-57H6DS8B/" target="_blank" rel="noopener" title="Dr. Franjo Rački">Dr. Franjo Rački</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VHOU3FZB/" target="_blank" rel="noopener" title="Kmetijske raznoterosti">Kmetijske raznoterosti</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-JM51EUM6/" target="_blank" rel="noopener" title="Obrtnijske raznoterosti">Obrtnijske raznoterosti</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-JPB84588/" target="_blank" rel="noopener" title="Škodljvci sadnega drevja">Škodljvci sadnega drevja</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-AAL1VEI4/" target="_blank" rel="noopener" title="Anarhistična pravda na Dunaji">Anarhistična pravda na Dunaji</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-BR9PAPMO/" target="_blank" rel="noopener" title="OGLASI">OGLASI</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-PMK06TOG/" target="_blank" rel="noopener" title="Deželni zbor Kranjski">Deželni zbor Kranjski</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-HHFULTZQ/" target="_blank" rel="noopener" title="Novice">Novice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-OALWFY44/" target="_blank" rel="noopener" title="Po deželnih zborih">Po deželnih zborih</a>
       </div>
+      <div class="card__scroll-hint">↕ scroll za več</div>
     </div>
   </div>
 
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-MUDLJ0LT/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-MUDLJ0LT"
+         data-title="Slovenec (1873) 1894, letnik 22, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-MUDLJ0LT/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-MUDLJ0LT"
         alt="Slovenec (1873) 1894"
@@ -1554,7 +1899,10 @@ letnik 22 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-YI6S2QCK/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-YI6S2QCK"
+         data-title="Slovenski narod 1894, letnik 27, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-YI6S2QCK/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-YI6S2QCK"
         alt="Slovenski narod 1894"
@@ -1573,7 +1921,10 @@ letnik 27 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-E5CK95B8/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-E5CK95B8"
+         data-title="Soča 1894, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-E5CK95B8/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-E5CK95B8"
         alt="Soča 1894"
@@ -1592,7 +1943,10 @@ letnik 27 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-YQYIATRD/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-YQYIATRD"
+         data-title="Zgodnja Danica 1894, letnik 47, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-YQYIATRD/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-YQYIATRD"
         alt="Zgodnja Danica 1894"
@@ -1610,27 +1964,11 @@ letnik 47 · št. 9      </div>
   </a>
 
 
-  <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-3BTTWVGX/" target="_blank" rel="noopener">
-    <div class="card__scan">
-      <img
-        src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-3BTTWVGX"
-        alt="Edinost (Trst) 1895"
-        loading="lazy"
-        onerror="this.parentElement.classList.add('card__scan--empty'); this.style.display='none'"
-      >
-    </div>
-    <div class="card__caption">
-      <div class="card__pub">Edinost (Trst)</div>
-      <div class="card__year">1895</div>
-      <div class="card__vol">
-letnik 20 · št. 27b      </div>
-      <span class="card__link">Odpri →</span>
-    </div>
-  </a>
-
-
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-XEK2V70P/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-XEK2V70P"
+         data-title="Edinost (Trst) 1895, letnik 20, št. 27a"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-XEK2V70P/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-XEK2V70P"
         alt="Edinost (Trst) 1895"
@@ -1648,8 +1986,33 @@ letnik 20 · št. 27a      </div>
   </a>
 
 
+  <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-3BTTWVGX/" target="_blank" rel="noopener">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-3BTTWVGX"
+         data-title="Edinost (Trst) 1895, letnik 20, št. 27b"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-3BTTWVGX/">
+      <img
+        src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-3BTTWVGX"
+        alt="Edinost (Trst) 1895"
+        loading="lazy"
+        onerror="this.parentElement.classList.add('card__scan--empty'); this.style.display='none'"
+      >
+    </div>
+    <div class="card__caption">
+      <div class="card__pub">Edinost (Trst)</div>
+      <div class="card__year">1895</div>
+      <div class="card__vol">
+letnik 20 · št. 27b      </div>
+      <span class="card__link">Odpri →</span>
+    </div>
+  </a>
+
+
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-LQIP5LRJ/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-LQIP5LRJ"
+         data-title="Slovenec (1873) 1895, letnik 23, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-LQIP5LRJ/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-LQIP5LRJ"
         alt="Slovenec (1873) 1895"
@@ -1668,7 +2031,10 @@ letnik 23 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-CWPUTDZ7/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-CWPUTDZ7"
+         data-title="Slovenski narod 1895, letnik 28, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-CWPUTDZ7/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-CWPUTDZ7"
         alt="Slovenski narod 1895"
@@ -1687,7 +2053,10 @@ letnik 28 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-RTCF7R7T/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-RTCF7R7T"
+         data-title="Slovenec (1873) 1896, letnik 24, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-RTCF7R7T/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-RTCF7R7T"
         alt="Slovenec (1873) 1896"
@@ -1706,7 +2075,10 @@ letnik 24 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-FOYCVMKJ/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-FOYCVMKJ"
+         data-title="Slovenski narod 1896, letnik 29, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-FOYCVMKJ/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-FOYCVMKJ"
         alt="Slovenski narod 1896"
@@ -1724,27 +2096,11 @@ letnik 29 · št. 51      </div>
   </a>
 
 
-  <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-YXY0IL5S/" target="_blank" rel="noopener">
-    <div class="card__scan">
-      <img
-        src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-YXY0IL5S"
-        alt="Edinost (Trst) 1897"
-        loading="lazy"
-        onerror="this.parentElement.classList.add('card__scan--empty'); this.style.display='none'"
-      >
-    </div>
-    <div class="card__caption">
-      <div class="card__pub">Edinost (Trst)</div>
-      <div class="card__year">1897</div>
-      <div class="card__vol">
-letnik 22 · št. 26a      </div>
-      <span class="card__link">Odpri →</span>
-    </div>
-  </a>
-
-
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-CYVEKCHK/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-CYVEKCHK"
+         data-title="Edinost (Trst) 1897, letnik 22, št. 26b"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-CYVEKCHK/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-CYVEKCHK"
         alt="Edinost (Trst) 1897"
@@ -1762,8 +2118,33 @@ letnik 22 · št. 26b      </div>
   </a>
 
 
+  <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-YXY0IL5S/" target="_blank" rel="noopener">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-YXY0IL5S"
+         data-title="Edinost (Trst) 1897, letnik 22, št. 26a"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-YXY0IL5S/">
+      <img
+        src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-YXY0IL5S"
+        alt="Edinost (Trst) 1897"
+        loading="lazy"
+        onerror="this.parentElement.classList.add('card__scan--empty'); this.style.display='none'"
+      >
+    </div>
+    <div class="card__caption">
+      <div class="card__pub">Edinost (Trst)</div>
+      <div class="card__year">1897</div>
+      <div class="card__vol">
+letnik 22 · št. 26a      </div>
+      <span class="card__link">Odpri →</span>
+    </div>
+  </a>
+
+
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-TFM9K33Z/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-TFM9K33Z"
+         data-title="Slovenec (1873) 1897, letnik 25, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-TFM9K33Z/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-TFM9K33Z"
         alt="Slovenec (1873) 1897"
@@ -1782,7 +2163,10 @@ letnik 25 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-7UMHY7C7/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-7UMHY7C7"
+         data-title="Slovenski narod 1897, letnik 30, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-7UMHY7C7/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-7UMHY7C7"
         alt="Slovenski narod 1897"
@@ -1801,7 +2185,10 @@ letnik 30 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-EUXK0JPF/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-EUXK0JPF"
+         data-title="Slovenec (1873) 1898, letnik 26, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-EUXK0JPF/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-EUXK0JPF"
         alt="Slovenec (1873) 1898"
@@ -1820,7 +2207,10 @@ letnik 26 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-8J4XK4XR/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-8J4XK4XR"
+         data-title="Slovenski narod 1898, letnik 31, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-8J4XK4XR/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-8J4XK4XR"
         alt="Slovenski narod 1898"
@@ -1839,7 +2229,10 @@ letnik 31 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-Y7RYE8FO/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-Y7RYE8FO"
+         data-title="Domoljub (Ljubljana) 1899, letnik 12, št. 5"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-Y7RYE8FO/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-Y7RYE8FO"
         alt="Domoljub (Ljubljana) 1899"
@@ -1858,7 +2251,10 @@ letnik 12 · št. 5      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-4FR60JGK/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-4FR60JGK"
+         data-title="Edinost (Trst) 1899, letnik 24, št. 50b"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-4FR60JGK/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-4FR60JGK"
         alt="Edinost (Trst) 1899"
@@ -1877,7 +2273,10 @@ letnik 24 · št. 50b      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-S52ESTYU/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-S52ESTYU"
+         data-title="Slovenec (1873) 1899, letnik 27, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-S52ESTYU/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-S52ESTYU"
         alt="Slovenec (1873) 1899"
@@ -1896,7 +2295,10 @@ letnik 27 · št. 50      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-F43UP6YN"
+         data-title="Slovenski gospodar 1899, letnik 33, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-F43UP6YN/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-F43UP6YN"
         alt="Slovenski gospodar 1899"
@@ -1909,14 +2311,12 @@ letnik 27 · št. 50      </div>
       <div class="card__year">1899</div>
       <div class="card__vol">
 letnik 33 · št. 9      </div>
-      <div class="card__articles-wrap">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-F43UP6YN/" target="_blank" rel="noopener">Dopisi</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-F1XNZVDL/" target="_blank" rel="noopener">Listek</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-GFWA0REM/" target="_blank" rel="noopener">Kako je na Ogrskem</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-CQJVIE6W/" target="_blank" rel="noopener">Gospodarske stvari</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-QUPXR9DY/" target="_blank" rel="noopener">Razne stvari</a>
-        </div>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-F43UP6YN/" target="_blank" rel="noopener" title="Dopisi">Dopisi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-F1XNZVDL/" target="_blank" rel="noopener" title="Listek">Listek</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-GFWA0REM/" target="_blank" rel="noopener" title="Kako je na Ogrskem">Kako je na Ogrskem</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-CQJVIE6W/" target="_blank" rel="noopener" title="Gospodarske stvari">Gospodarske stvari</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-QUPXR9DY/" target="_blank" rel="noopener" title="Razne stvari">Razne stvari</a>
       </div>
     </div>
   </div>
@@ -1924,7 +2324,10 @@ letnik 33 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-JJDMXS0B/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-JJDMXS0B"
+         data-title="Slovenski narod 1899, letnik 32, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-JJDMXS0B/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-JJDMXS0B"
         alt="Slovenski narod 1899"
@@ -1943,7 +2346,10 @@ letnik 32 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-VR5OQWMU/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-VR5OQWMU"
+         data-title="Edinost (Trst) 1900, letnik 25, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-VR5OQWMU/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-VR5OQWMU"
         alt="Edinost (Trst) 1900"
@@ -1962,7 +2368,10 @@ letnik 25 · št. 50      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-NDGUATWL"
+         data-title="Kmetijske in rokodelske novice 1900, letnik 58, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-NDGUATWL/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-NDGUATWL"
         alt="Kmetijske in rokodelske novice 1900"
@@ -1975,15 +2384,13 @@ letnik 25 · št. 50      </div>
       <div class="card__year">1900</div>
       <div class="card__vol">
 letnik 58 · št. 9      </div>
-      <div class="card__articles-wrap">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-NDGUATWL/" target="_blank" rel="noopener">Politični pregled</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-JVXZKZCH/" target="_blank" rel="noopener">Trgovska in obrtniška zbornica za Kranjsko</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-WMUN2XFL/" target="_blank" rel="noopener">OGLASI</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-BVFJA72Z/" target="_blank" rel="noopener">Vrednost gnojnice</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-XS9I1BVX/" target="_blank" rel="noopener">Novice</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-725ORKC4/" target="_blank" rel="noopener">Korberjev program</a>
-        </div>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-NDGUATWL/" target="_blank" rel="noopener" title="Politični pregled">Politični pregled</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-JVXZKZCH/" target="_blank" rel="noopener" title="Trgovska in obrtniška zbornica za Kranjsko">Trgovska in obrtniška zbornica za Kranjsko</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-WMUN2XFL/" target="_blank" rel="noopener" title="OGLASI">OGLASI</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-BVFJA72Z/" target="_blank" rel="noopener" title="Vrednost gnojnice">Vrednost gnojnice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-XS9I1BVX/" target="_blank" rel="noopener" title="Novice">Novice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-725ORKC4/" target="_blank" rel="noopener" title="Korberjev program">Korberjev program</a>
       </div>
     </div>
   </div>
@@ -1991,7 +2398,10 @@ letnik 58 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-F03U4CY3/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-F03U4CY3"
+         data-title="Slovenec (1873) 1900, letnik 28, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-F03U4CY3/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-F03U4CY3"
         alt="Slovenec (1873) 1900"
@@ -2010,7 +2420,10 @@ letnik 28 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-JLGS59P5/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-JLGS59P5"
+         data-title="Slovenski narod 1900, letnik 33, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-JLGS59P5/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-JLGS59P5"
         alt="Slovenski narod 1900"
@@ -2029,7 +2442,10 @@ letnik 33 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-9JDLR3OI/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-9JDLR3OI"
+         data-title="Zgodnja Danica 1900, letnik 53, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-9JDLR3OI/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-9JDLR3OI"
         alt="Zgodnja Danica 1900"
@@ -2048,7 +2464,10 @@ letnik 53 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-GXBK57TV/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-GXBK57TV"
+         data-title="Edinost (Trst) 1901, letnik 26, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-GXBK57TV/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-GXBK57TV"
         alt="Edinost (Trst) 1901"
@@ -2067,7 +2486,10 @@ letnik 26 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-CKT3A0AG/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-CKT3A0AG"
+         data-title="Slovenec (1873) 1901, letnik 29, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-CKT3A0AG/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-CKT3A0AG"
         alt="Slovenec (1873) 1901"
@@ -2086,7 +2508,10 @@ letnik 29 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-K6H6U4MU/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-K6H6U4MU"
+         data-title="Slovenski narod 1901, letnik 34, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-K6H6U4MU/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-K6H6U4MU"
         alt="Slovenski narod 1901"
@@ -2105,7 +2530,10 @@ letnik 34 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-PNTCJ4IW/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-PNTCJ4IW"
+         data-title="Soča 1901, št. 26"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-PNTCJ4IW/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-PNTCJ4IW"
         alt="Soča 1901"
@@ -2124,7 +2552,10 @@ letnik 34 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-9RA78L7L/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-9RA78L7L"
+         data-title="Edinost (Trst) 1903, letnik 28, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-9RA78L7L/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-9RA78L7L"
         alt="Edinost (Trst) 1903"
@@ -2143,7 +2574,10 @@ letnik 28 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-J0WPS4FQ/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-J0WPS4FQ"
+         data-title="Slovenec (1873) 1903, letnik 31, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-J0WPS4FQ/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-J0WPS4FQ"
         alt="Slovenec (1873) 1903"
@@ -2162,7 +2596,10 @@ letnik 31 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-VPQKE1BJ/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-VPQKE1BJ"
+         data-title="Slovenski narod 1903, letnik 36, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-VPQKE1BJ/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-VPQKE1BJ"
         alt="Slovenski narod 1903"
@@ -2181,7 +2618,10 @@ letnik 36 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-2V6CDTHH/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-2V6CDTHH"
+         data-title="Edinost (Trst) 1904, letnik 29, št. 62"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-2V6CDTHH/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-2V6CDTHH"
         alt="Edinost (Trst) 1904"
@@ -2200,7 +2640,10 @@ letnik 29 · št. 62      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-5YMJ8G3E/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-5YMJ8G3E"
+         data-title="Slovenec (1873) 1904, letnik 32, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-5YMJ8G3E/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-5YMJ8G3E"
         alt="Slovenec (1873) 1904"
@@ -2219,7 +2662,10 @@ letnik 32 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-QCN741U6/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-QCN741U6"
+         data-title="Slovenski narod 1904, letnik 37, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-QCN741U6/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-QCN741U6"
         alt="Slovenski narod 1904"
@@ -2238,7 +2684,10 @@ letnik 37 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-ULGASL4V/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-ULGASL4V"
+         data-title="Soča 1904, št. 18"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-ULGASL4V/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-ULGASL4V"
         alt="Soča 1904"
@@ -2257,7 +2706,10 @@ letnik 37 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-BYBWB5K1/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-BYBWB5K1"
+         data-title="Domoljub (Ljubljana) 1905, letnik 18, št. 5"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-BYBWB5K1/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-BYBWB5K1"
         alt="Domoljub (Ljubljana) 1905"
@@ -2276,7 +2728,10 @@ letnik 18 · št. 5      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-40UYRKPQ/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-40UYRKPQ"
+         data-title="Edinost (Trst) 1905, letnik 30, št. 61"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-40UYRKPQ/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-40UYRKPQ"
         alt="Edinost (Trst) 1905"
@@ -2295,7 +2750,10 @@ letnik 30 · št. 61      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-FDMPSOD2/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-FDMPSOD2"
+         data-title="Slovenec (1873) 1905, letnik 33, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-FDMPSOD2/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-FDMPSOD2"
         alt="Slovenec (1873) 1905"
@@ -2314,7 +2772,10 @@ letnik 33 · št. 50      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-2A7G0GM6"
+         data-title="Slovenski gospodar 1905, letnik 39, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-2A7G0GM6/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-2A7G0GM6"
         alt="Slovenski gospodar 1905"
@@ -2327,15 +2788,13 @@ letnik 33 · št. 50      </div>
       <div class="card__year">1905</div>
       <div class="card__vol">
 letnik 39 · št. 9      </div>
-      <div class="card__articles-wrap">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-2A7G0GM6/" target="_blank" rel="noopener">Državni zbor</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VAP0QOCO/" target="_blank" rel="noopener">Dopisi</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-SLE3Q4D6/" target="_blank" rel="noopener">Rusko-japonska vojska</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-RHE671NT/" target="_blank" rel="noopener">LISTEK</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-7LEY9OZ6/" target="_blank" rel="noopener">Beda na Slov. Štajerju</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-OA7LHW16/" target="_blank" rel="noopener">Razne stvari</a>
-        </div>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-2A7G0GM6/" target="_blank" rel="noopener" title="Državni zbor">Državni zbor</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-VAP0QOCO/" target="_blank" rel="noopener" title="Dopisi">Dopisi</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-SLE3Q4D6/" target="_blank" rel="noopener" title="Rusko-japonska vojska">Rusko-japonska vojska</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-RHE671NT/" target="_blank" rel="noopener" title="LISTEK">LISTEK</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-7LEY9OZ6/" target="_blank" rel="noopener" title="Beda na Slov. Štajerju">Beda na Slov. Štajerju</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-OA7LHW16/" target="_blank" rel="noopener" title="Razne stvari">Razne stvari</a>
       </div>
     </div>
   </div>
@@ -2343,7 +2802,10 @@ letnik 39 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-14EMUTO0/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-14EMUTO0"
+         data-title="Slovenski narod 1905, letnik 38, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-14EMUTO0/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-14EMUTO0"
         alt="Slovenski narod 1905"
@@ -2362,7 +2824,10 @@ letnik 38 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-B723CIU4/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-B723CIU4"
+         data-title="Edinost (Trst) 1906, letnik 31, št. 61"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-B723CIU4/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-B723CIU4"
         alt="Edinost (Trst) 1906"
@@ -2381,7 +2846,10 @@ letnik 31 · št. 61      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-QBL1L0H2/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-QBL1L0H2"
+         data-title="Slovenec (1873) 1906, letnik 34, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-QBL1L0H2/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-QBL1L0H2"
         alt="Slovenec (1873) 1906"
@@ -2400,7 +2868,10 @@ letnik 34 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-TX0YMXGW/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-TX0YMXGW"
+         data-title="Slovenski narod 1906, letnik 39, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-TX0YMXGW/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-TX0YMXGW"
         alt="Slovenski narod 1906"
@@ -2419,7 +2890,10 @@ letnik 39 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-TBFEX396/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-TBFEX396"
+         data-title="Edinost (Trst) 1907, letnik 32, št. 61"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-TBFEX396/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-TBFEX396"
         alt="Edinost (Trst) 1907"
@@ -2438,7 +2912,10 @@ letnik 32 · št. 61      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-LRC1HNY3/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-LRC1HNY3"
+         data-title="Slovenec (1873) 1907, letnik 35, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-LRC1HNY3/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-LRC1HNY3"
         alt="Slovenec (1873) 1907"
@@ -2457,7 +2934,10 @@ letnik 35 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-Z9B7X7LK/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-Z9B7X7LK"
+         data-title="Slovenski narod 1907, letnik 40, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-Z9B7X7LK/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-Z9B7X7LK"
         alt="Slovenski narod 1907"
@@ -2476,7 +2956,10 @@ letnik 40 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-2YQGFV0C/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-2YQGFV0C"
+         data-title="Soča 1907, št. 25"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-2YQGFV0C/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-2YQGFV0C"
         alt="Soča 1907"
@@ -2495,7 +2978,10 @@ letnik 40 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-IAICD65J/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-IAICD65J"
+         data-title="Edinost (Trst) 1908, letnik 33, št. 62"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-IAICD65J/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-IAICD65J"
         alt="Edinost (Trst) 1908"
@@ -2514,7 +3000,10 @@ letnik 33 · št. 62      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-KG7D0M37/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-KG7D0M37"
+         data-title="Slovenec (1873) 1908, letnik 36, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-KG7D0M37/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-KG7D0M37"
         alt="Slovenec (1873) 1908"
@@ -2533,7 +3022,10 @@ letnik 36 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-MLGVZ5MP/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-MLGVZ5MP"
+         data-title="Slovenski narod 1908, letnik 41, št. 53"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-MLGVZ5MP/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-MLGVZ5MP"
         alt="Slovenski narod 1908"
@@ -2552,7 +3044,10 @@ letnik 41 · št. 53      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-MMKG5U32/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-MMKG5U32"
+         data-title="Soča 1908, št. 27"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-MMKG5U32/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-MMKG5U32"
         alt="Soča 1908"
@@ -2571,7 +3066,10 @@ letnik 41 · št. 53      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-C95M4ZUE/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-C95M4ZUE"
+         data-title="Edinost (Trst) 1909, letnik 34, št. 61"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-C95M4ZUE/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-C95M4ZUE"
         alt="Edinost (Trst) 1909"
@@ -2590,7 +3088,10 @@ letnik 34 · št. 61      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-3Q7WHDP4/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-3Q7WHDP4"
+         data-title="Slovenec (1873) 1909, letnik 37, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-3Q7WHDP4/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-3Q7WHDP4"
         alt="Slovenec (1873) 1909"
@@ -2609,7 +3110,10 @@ letnik 37 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-2PSJFGA0/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-2PSJFGA0"
+         data-title="Slovenski narod 1909, letnik 42, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-2PSJFGA0/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-2PSJFGA0"
         alt="Slovenski narod 1909"
@@ -2628,7 +3132,10 @@ letnik 42 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-53XHVEJG/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-53XHVEJG"
+         data-title="Soča 1909, št. 25"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-53XHVEJG/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-53XHVEJG"
         alt="Soča 1909"
@@ -2647,7 +3154,10 @@ letnik 42 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-STERPXZK/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-STERPXZK"
+         data-title="Edinost (Trst) 1910, letnik 35, št. 61"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-STERPXZK/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-STERPXZK"
         alt="Edinost (Trst) 1910"
@@ -2666,7 +3176,10 @@ letnik 35 · št. 61      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-BVF70MLC/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-BVF70MLC"
+         data-title="Slovenec (1873) 1910, letnik 38, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-BVF70MLC/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-BVF70MLC"
         alt="Slovenec (1873) 1910"
@@ -2685,7 +3198,10 @@ letnik 38 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-8A0ZZP3V/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-8A0ZZP3V"
+         data-title="Slovenski narod 1910, letnik 43, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-8A0ZZP3V/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-8A0ZZP3V"
         alt="Slovenski narod 1910"
@@ -2704,7 +3220,10 @@ letnik 43 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-8DCGPSM3/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-8DCGPSM3"
+         data-title="Domoljub (Ljubljana) 1911, letnik 14, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-8DCGPSM3/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-8DCGPSM3"
         alt="Domoljub (Ljubljana) 1911"
@@ -2723,7 +3242,10 @@ letnik 14 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-Q963ZDFT/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-Q963ZDFT"
+         data-title="Edinost (Trst) 1911, letnik 36, št. 61"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-Q963ZDFT/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-Q963ZDFT"
         alt="Edinost (Trst) 1911"
@@ -2742,7 +3264,10 @@ letnik 36 · št. 61      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-GHK4YVSS/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-GHK4YVSS"
+         data-title="Slovenec (1873) 1911, letnik 39, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-GHK4YVSS/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-GHK4YVSS"
         alt="Slovenec (1873) 1911"
@@ -2761,7 +3286,10 @@ letnik 39 · št. 50      </div>
 
 
   <div class="card card--grouped">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-ZAL2XO0O"
+         data-title="Slovenski gospodar 1911, letnik 45, št. 9"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-ZAL2XO0O/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-ZAL2XO0O"
         alt="Slovenski gospodar 1911"
@@ -2774,13 +3302,11 @@ letnik 39 · št. 50      </div>
       <div class="card__year">1911</div>
       <div class="card__vol">
 letnik 45 · št. 9      </div>
-      <div class="card__articles-wrap">
-        <div class="card__articles">
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZAL2XO0O/" target="_blank" rel="noopener">Politični ogled</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-UHB7E1BT/" target="_blank" rel="noopener">PODLISTEK</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-6HFVN2HA/" target="_blank" rel="noopener">Razne novice</a>
-          <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-OI27R4FX/" target="_blank" rel="noopener">Gospodarski polom liberalcev</a>
-        </div>
+      <div class="card__articles">
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-ZAL2XO0O/" target="_blank" rel="noopener" title="Politični ogled">Politični ogled</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-UHB7E1BT/" target="_blank" rel="noopener" title="PODLISTEK">PODLISTEK</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-6HFVN2HA/" target="_blank" rel="noopener" title="Razne novice">Razne novice</a>
+        <a class="card__article" href="https://dlib.si/details/URN:NBN:SI:DOC-OI27R4FX/" target="_blank" rel="noopener" title="Gospodarski polom liberalcev">Gospodarski polom liberalcev</a>
       </div>
     </div>
   </div>
@@ -2788,7 +3314,10 @@ letnik 45 · št. 9      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-GG6IYUJ6/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-GG6IYUJ6"
+         data-title="Slovenski narod 1911, letnik 44, št. 50"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-GG6IYUJ6/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-GG6IYUJ6"
         alt="Slovenski narod 1911"
@@ -2807,7 +3336,10 @@ letnik 44 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-6ZLS9NOK/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-6ZLS9NOK"
+         data-title="Soča 1911, št. 25"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-6ZLS9NOK/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-6ZLS9NOK"
         alt="Soča 1911"
@@ -2826,7 +3358,10 @@ letnik 44 · št. 50      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-NA332WB9/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-NA332WB9"
+         data-title="Edinost (Trst) 1912, letnik 37, št. 62"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-NA332WB9/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-NA332WB9"
         alt="Edinost (Trst) 1912"
@@ -2845,7 +3380,10 @@ letnik 37 · št. 62      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-4NEP44YG/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-4NEP44YG"
+         data-title="Edinost-Unity 1912, letnik 2, št. 5"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-4NEP44YG/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-4NEP44YG"
         alt="Edinost-Unity 1912"
@@ -2864,7 +3402,10 @@ letnik 2 · št. 5      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-XG4GABZH/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-XG4GABZH"
+         data-title="Slovenec (1873) 1912, letnik 40, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-XG4GABZH/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-XG4GABZH"
         alt="Slovenec (1873) 1912"
@@ -2883,7 +3424,10 @@ letnik 40 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-5ABX5SB0/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-5ABX5SB0"
+         data-title="Slovenski narod 1912, letnik 45, št. 51"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-5ABX5SB0/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-5ABX5SB0"
         alt="Slovenski narod 1912"
@@ -2902,7 +3446,10 @@ letnik 45 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-Y7DJMIBY/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-Y7DJMIBY"
+         data-title="Soča 1912, št. 26"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-Y7DJMIBY/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-Y7DJMIBY"
         alt="Soča 1912"
@@ -2921,7 +3468,10 @@ letnik 45 · št. 51      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-ITAZ7CTW/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-ITAZ7CTW"
+         data-title="Edinost (Trst) 1913, letnik 38, št. 61"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-ITAZ7CTW/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-ITAZ7CTW"
         alt="Edinost (Trst) 1913"
@@ -2940,7 +3490,10 @@ letnik 38 · št. 61      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-RAXM4TFE/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-RAXM4TFE"
+         data-title="Edinost (Trst) 1914, letnik 39, št. 29"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-RAXM4TFE/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-RAXM4TFE"
         alt="Edinost (Trst) 1914"
@@ -2959,7 +3512,10 @@ letnik 39 · št. 29      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-UTACSLKY/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-UTACSLKY"
+         data-title="Slovenec (1873) 1914, letnik 42, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-UTACSLKY/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-UTACSLKY"
         alt="Slovenec (1873) 1914"
@@ -2978,7 +3534,10 @@ letnik 42 · št. 49      </div>
 
 
   <a class="card" href="https://dlib.si/details/URN:NBN:SI:DOC-CR0CWB5U/" target="_blank" rel="noopener">
-    <div class="card__scan">
+    <div class="card__scan"
+         data-urn="URN:NBN:SI:DOC-CR0CWB5U"
+         data-title="Slovenski narod 1914, letnik 47, št. 49"
+         data-dlib="https://dlib.si/details/URN:NBN:SI:DOC-CR0CWB5U/">
       <img
         src="https://www.dlib.si/streamdb/URN:NBN:SI:DOC-CR0CWB5U"
         alt="Slovenski narod 1914"
@@ -3003,5 +3562,123 @@ letnik 47 · št. 49      </div>
   <span><a href="..">Na današnji dan</a></span>
 </footer>
 
+<script>
+(function () {
+  // ── Scroll hint ──
+  document.querySelectorAll('.card__articles').forEach(function (el) {
+    var caption = el.closest('.card__caption');
+    var hint = caption && caption.querySelector('.card__scroll-hint');
+    if (hint && el.scrollHeight <= el.clientHeight + 2) {
+      hint.style.display = 'none';
+    }
+  });
+
+  // ── Lightbox ──
+  var lb     = document.getElementById('lb');
+  var lbImg  = document.getElementById('lb-img');
+  var lbTitle= document.getElementById('lb-title');
+  var lbPnum = document.getElementById('lb-pnum');
+  var lbDlib = document.getElementById('lb-dlib');
+  var lbArea = document.getElementById('lb-area');
+  var lbPrev = document.getElementById('lb-prev');
+  var lbNext = document.getElementById('lb-next');
+  var lbClose= document.getElementById('lb-close');
+
+  var currentUrn = '';
+  var currentPage = 1;
+  var maxPage = 1;
+  var loading = false;
+
+  function scanUrl(urn, page) {
+    return 'https://www.dlib.si/streamdb/' + urn + (page > 1 ? '?embedview=1&pagenum=' + page : '');
+  }
+
+  function loadPage(page) {
+    if (loading) return;
+    loading = true;
+    lbPrev.disabled = true;
+    lbNext.disabled = true;
+    lbImg.style.opacity = '0.4';
+    lbImg.alt = 'Nalaganje…';
+
+    var url = scanUrl(currentUrn, page);
+    var img = new Image();
+    img.onload = function () {
+      lbImg.src = url;
+      lbImg.style.opacity = '1';
+      lbImg.style.display = '';
+      lbArea.querySelector('.lb__no-preview') && lbArea.querySelector('.lb__no-preview').remove();
+      currentPage = page;
+      if (page > maxPage) maxPage = page;
+      lbPnum.textContent = 'Stran ' + page;
+      lbPrev.disabled = page <= 1;
+      lbNext.disabled = false;
+      lbArea.scrollTop = 0;
+      loading = false;
+    };
+    img.onerror = function () {
+      loading = false;
+      if (page === 1) {
+        lbImg.style.display = 'none';
+        if (!lbArea.querySelector('.lb__no-preview')) {
+          var msg = document.createElement('p');
+          msg.className = 'lb__no-preview';
+          msg.textContent = 'Predogled ni na voljo. Odpri v dlib.si →';
+          lbArea.appendChild(msg);
+        }
+        lbPnum.textContent = '';
+      } else {
+        // past last page — disable next
+        lbNext.disabled = true;
+        lbPrev.disabled = currentPage <= 1;
+        lbImg.style.opacity = '1';
+        lbPnum.textContent = 'Stran ' + currentPage + ' (zadnja)';
+      }
+    };
+    img.src = url;
+  }
+
+  function openLightbox(urn, title, dlibUrl) {
+    currentUrn = urn;
+    currentPage = 1;
+    maxPage = 1;
+    lbTitle.textContent = title;
+    lbDlib.href = dlibUrl;
+    lbImg.src = '';
+    lbImg.style.display = '';
+    lbImg.style.opacity = '1';
+    lb.classList.add('lb--open');
+    document.body.style.overflow = 'hidden';
+    loadPage(1);
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('lb--open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLightbox(); });
+  lbPrev.addEventListener('click', function () { if (currentPage > 1) loadPage(currentPage - 1); });
+  lbNext.addEventListener('click', function () { loadPage(currentPage + 1); });
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('lb--open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft'  && currentPage > 1) loadPage(currentPage - 1);
+    if (e.key === 'ArrowRight') loadPage(currentPage + 1);
+  });
+
+  // Attach click to all scan divs with data-urn
+  document.querySelectorAll('.card__scan[data-urn]').forEach(function (el) {
+    if (el.classList.contains('card__scan--empty')) return;
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      openLightbox(el.dataset.urn, el.dataset.title, el.dataset.dlib);
+    });
+  });
+}());
+</script>
 </body>
 </html>
